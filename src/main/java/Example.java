@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -103,11 +105,6 @@ public class Example  {
 
     @RequestMapping(value = "/saveState", method = RequestMethod.POST)
     public long saveNewState(@RequestBody String json) throws Exception {
-        System.out.println("New state: " + json);
-        if (!new File(CSVReader.FOLDER_UPLOAD+"/states/").exists()) {
-            new File(CSVReader.FOLDER_UPLOAD+"/states/").mkdir();
-        }
-        Files.write(Paths.get(CSVReader.FOLDER_UPLOAD + "/states/default"), json.getBytes());
         State st = new State(json);
         stateService.create(st);
         return st.getId();

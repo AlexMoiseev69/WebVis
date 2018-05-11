@@ -171,7 +171,7 @@ function createOneMeshGenome(allChains, palettes) {
     var currentIndex = 0;
     var maxRadius = 0;
     for (var key1 in allChains){
-        var color = palettes[indexColor];
+        var color = palettes[indexColor% (palettes.length-1)];
         allChains[key1].color = color;
         allChains[key1].visible = true;
         var points = allChains[key1].points;

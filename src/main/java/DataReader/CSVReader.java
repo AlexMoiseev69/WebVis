@@ -6,6 +6,8 @@ import DataReader.Models.ChainGenome;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -16,7 +18,7 @@ import java.util.stream.Stream;
  */
 public class CSVReader {
 
-    public static String FOLDER_UPLOAD = "C:\\Users\\user\\Downloads\\DELETEME\\";
+    public static String FOLDER_UPLOAD = "./files/";
 
     public Map<String, ChainGenome> readPoints(String filename) {
 //        URL url = this.getClass().getClassLoader().getResource(filename);
@@ -26,7 +28,14 @@ public class CSVReader {
 //        } catch (URISyntaxException e) {
 //            e.printStackTrace();
 //        }
-        try (Stream<String> stream = Files.lines(Paths.get(FOLDER_UPLOAD + filename))) {
+        URL url = this.getClass().getClassLoader().getResource(FOLDER_UPLOAD + filename);
+        File file = null;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            file = new File(url.getPath());
+        }
+        try (Stream<String> stream = Files.lines(Paths.get(file.getPath()))) {
             final int[] currentOrder = {0};
             stream.forEach(line -> {
                 String[] parts = line.split("\t");
@@ -79,15 +88,22 @@ public class CSVReader {
     public List<String> getFilesName() {
         List<String> results = new ArrayList<String>();
 
+        URL url = this.getClass().getClassLoader().getResource(FOLDER_UPLOAD);
+        File file = null;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            file = new File(url.getPath());
+        }
 
-        File[] files = new File(FOLDER_UPLOAD).listFiles();
+        File[] files = file.listFiles();
 
         if(files==null)
             return new ArrayList<>();
 
-        for (File file : files) {
-            if (file.isFile()) {
-                results.add(file.getName());
+        for (File f : files) {
+            if (f.isFile()) {
+                results.add(f.getName());
             }
         }
 
